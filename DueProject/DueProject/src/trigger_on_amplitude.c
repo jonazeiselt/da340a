@@ -17,7 +17,7 @@ void pin_edge_handler(const uint32_t id, const uint32_t index)
 	if ((id == ID_PIOB) && (index == PIO_PB26)){
 		if (pio_get(PIOB, PIO_TYPE_PIO_INPUT, PIO_PB26)){
 			puts("Amplitude level detected");
-			if(configureDone == 1){ //access external variable, declaration has been done in the included header-file,
+			if(configureDone == 1){ //access external variable, declaration has been done in the included header-file
 				tc_start(TC0, 0); 
 				pio_disable_interrupt(PIOB, PIO_PB26); //disable interrupt for now
 				puts("Sampling has been started");
