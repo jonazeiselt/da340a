@@ -5,12 +5,11 @@
 *  Author: Daniel
 */
 
-#include "configure_tc.h"
 #include <asf.h>
 #include <inttypes.h>
-#include "trigger_on_amplitude.h"
 #include <pio.h>
-
+#include "configure_tc.h"
+#include "trigger_on_amplitude.h"
 
 void pin_edge_handler(const uint32_t id, const uint32_t index)
 {

@@ -4,7 +4,11 @@
 
 src\ASF\sam\drivers\pdc\pdc.c
 
+src\real_time_timer.c
+
 src\sampling.c
+
+src\timer_counter.c
 
 src\trigger_on_amplitude.c
 

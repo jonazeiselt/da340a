@@ -143,7 +143,7 @@ src/main.d src/main.o: ../src/main.c ../src/asf.h \
  ../src/ASF/sam/drivers/pio/pio_handler.h ../src/config/conf_board.h \
  ../src/adc_with_pdc.h ../src/configure_tc.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\inttypes.h \
- ../src/sampling.h ../src/trigger_on_amplitude.h
+ ../src/sampling.h ../src/trigger_on_amplitude.h ../src/timer_counter.h
 
 ../src/asf.h:
 
@@ -454,3 +454,5 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 ../src/sampling.h:
 
 ../src/trigger_on_amplitude.h:
+
+../src/timer_counter.h:

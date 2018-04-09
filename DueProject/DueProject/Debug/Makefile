@@ -98,7 +98,9 @@ SUBDIRS :=  \
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../src/ASF/sam/drivers/pdc/pdc.c \
+../src/real_time_timer.c \
 ../src/sampling.c \
+../src/timer_counter.c \
 ../src/trigger_on_amplitude.c \
 ../src/adc_with_pdc.c \
 ../src/ASF/common/services/delay/sam/cycle_counter.c \
@@ -134,7 +136,9 @@ ASM_SRCS +=
 
 OBJS +=  \
 src/ASF/sam/drivers/pdc/pdc.o \
+src/real_time_timer.o \
 src/sampling.o \
+src/timer_counter.o \
 src/trigger_on_amplitude.o \
 src/adc_with_pdc.o \
 src/ASF/common/services/delay/sam/cycle_counter.o \
@@ -163,7 +167,9 @@ src/main.o
 
 OBJS_AS_ARGS +=  \
 src/ASF/sam/drivers/pdc/pdc.o \
+src/real_time_timer.o \
 src/sampling.o \
+src/timer_counter.o \
 src/trigger_on_amplitude.o \
 src/adc_with_pdc.o \
 src/ASF/common/services/delay/sam/cycle_counter.o \
@@ -192,7 +198,9 @@ src/main.o
 
 C_DEPS +=  \
 src/ASF/sam/drivers/pdc/pdc.d \
+src/real_time_timer.d \
 src/sampling.d \
+src/timer_counter.d \
 src/trigger_on_amplitude.d \
 src/adc_with_pdc.d \
 src/ASF/common/services/delay/sam/cycle_counter.d \
@@ -221,7 +229,9 @@ src/main.d
 
 C_DEPS_AS_ARGS +=  \
 src/ASF/sam/drivers/pdc/pdc.d \
+src/real_time_timer.d \
 src/sampling.d \
+src/timer_counter.d \
 src/trigger_on_amplitude.d \
 src/adc_with_pdc.d \
 src/ASF/common/services/delay/sam/cycle_counter.d \
@@ -263,6 +273,10 @@ LINKER_SCRIPT_DEP+=  \
 
 
 # AVR32/GNU C Compiler
+
+
+
+
 
 
 

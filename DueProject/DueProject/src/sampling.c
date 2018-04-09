@@ -27,12 +27,12 @@ void TC0_Handler(void)
 	volatile uint32_t ul_dummy;
 
 	/* Clear status bit to acknowledge interrupt */
-	ul_dummy = tc_get_status(TC0, 0);			//The compare bit is cleared by reading the register, manual p. 915
+	ul_dummy = tc_get_status(TC0, 0);	//The compare bit is cleared by reading the register, manual p. 915
 
 	/* Avoid compiler warning */
 	UNUSED(ul_dummy);
 	
-	/* Start sampling (i.e. take convert one sample value) */
+	/* Start sampling (i.e. convert one sample value) */
 	adc_start(ADC);
 	
 }

@@ -29,12 +29,13 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
-#include "conf_board.h"
 #include <stdio_serial.h>
+#include "conf_board.h"
 #include "adc_with_pdc.h"
 #include "configure_tc.h"
 #include "sampling.h"
 #include "trigger_on_amplitude.h"
+#include "timer_counter.h"
 
 #define CHECK_PIN PIO_PB26_IDX	//Arduino Due pin 22 used to measure work load
 
@@ -64,15 +65,21 @@ int main (void)
 	/* Insert system clock initialization code here (sysclk_init()). */
 	sysclk_init();
 	board_init();
-	ioport_init();
 	configureConsole();
+	/*
+	ioport_init();
 	adc_setup();
 	configure_tc();
 	init_amplitude_trigger();
+	*/
+	TC1CH1_setup_and_kickoff();
+	
 	
 	//do nothing in main()-loop
 	while (1)
 	{
+		printf("Timer Counter value: %u\n", read_counter_value());
+		
 	}
 
 }
