@@ -32,18 +32,8 @@ void TC0_Handler(void)
 	/* Avoid compiler warning */
 	UNUSED(ul_dummy);
 	
+	/* Start sampling (i.e. take convert one sample value) */
 	adc_start(ADC);
 	
 }
 
-/*
-//Only sample values above lower threshold value in Comparison Window, else enter Sleep Mode. 
-//How do we detect amplitude level of input signal without ADC?
-static uint32_t check_threshold(){
-	//Disable write protection
-	*p_ADC_WPMR = 0;
-	*p_ADC_WPMR = WPKEY_ADC;
-	*p_ADC_WPMR &= ~(1 << WPEN);
-	return 0;
-}
-*/

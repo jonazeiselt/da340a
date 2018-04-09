@@ -13,6 +13,7 @@
 */
 #include <asf.h>
 #include "adc_with_pdc.h"
+#include "configure_tc.h"
 #include <string.h>
 #include <inttypes.h>
 
@@ -120,17 +121,20 @@ void ADC_Handler(void){
 	* and the ADC_RNCR have reached zero. Buffer of sample values is full.
 	*/
 	if ((adc_get_status(ADC) & ADC_ISR_RXBUFF) == ADC_ISR_RXBUFF) {
+		tc_stop(TC0, 0);  
 		
 		for (int i = 0; i < ADC_BUFFER_SIZE; i++)
 		{
 			printf("Buffer values: %u, index: %u\n", adc_buffer_sample_values[i], i);
 		}
 		smooth_values(adc_buffer_sample_values);
+		/*
 		for (int i = 0; i < ADC_BUFFER_SIZE; i++)
 		{
 			printf("Temp buffer: %u, index: %u\n", adc_buffer_sample_values[i], i);
 		}
-		
+		*/
+	    pio_enable_interrupt(PIOB, PIO_PB26); //re-enable edge-level detection 
 		/* Clear sample buffer */
 		memset((void *)&adc_buffer_sample_values, 0, sizeof(adc_buffer_sample_values));
 		/* Read new buffer data. Necessary, otherwise buffer values are null/zero */

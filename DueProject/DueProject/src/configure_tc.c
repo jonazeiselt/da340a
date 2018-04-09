@@ -7,7 +7,10 @@
 
 #include "configure_tc.h"
 #include <asf.h>
-#include "tc.h"
+
+int configureDone = 0; // define and initialize external variable
+                       // initialization goes only with definition
+					   // Only one source file may define the external variable, and definition is done only ONCE
 
 void configure_tc(void)
 {
@@ -24,6 +27,6 @@ void configure_tc(void)
 	NVIC_EnableIRQ((IRQn_Type) ID_TC0);
 	tc_enable_interrupt(TC0, 0, TC_IER_CPCS); //CPCS is 5th bit (nr 4) in  TC Interrupt Enable Register (TC_IER0, ch 0: 0x40080024)
 
-	tc_start(TC0, 0);
+	configureDone = 1;
 
 }

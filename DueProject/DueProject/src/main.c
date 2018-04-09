@@ -34,9 +34,9 @@
 #include "adc_with_pdc.h"
 #include "configure_tc.h"
 #include "sampling.h"
+#include "trigger_on_amplitude.h"
 
-#define CHECK_PIN PIO_PB26_IDX	//Ardiuno Due pin 22 used to measure work load
-
+#define CHECK_PIN PIO_PB26_IDX	//Arduino Due pin 22 used to measure work load
 
 
 /**
@@ -64,26 +64,15 @@ int main (void)
 	/* Insert system clock initialization code here (sysclk_init()). */
 	sysclk_init();
 	board_init();
-	configureConsole();
-	//adc_setup();
-	//configure_tc();
-	
 	ioport_init();
-
-	ioport_set_pin_dir(CHECK_PIN, IOPORT_DIR_INPUT);
-	//do nothing in main()-loop
+	configureConsole();
+	adc_setup();
+	configure_tc();
+	init_amplitude_trigger();
 	
+	//do nothing in main()-loop
 	while (1)
 	{
-		if (ioport_get_pin_level(CHECK_PIN) == 1)
-		{
-			puts("Amplitude level detected");
-		} 
-		else
-		{
-			puts("----NO EDGE----");
-		}
-		
 	}
 
 }

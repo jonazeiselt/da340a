@@ -2,7 +2,11 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
+src\ASF\sam\drivers\pdc\pdc.c
+
 src\sampling.c
+
+src\trigger_on_amplitude.c
 
 src\adc_with_pdc.c
 
