@@ -9,16 +9,6 @@
 #include <asf.h>
 #include "sampling.h"
 
-#define ADC_MR               0x400C0004  /* ADC Mode Register */
-#define SLEEP_BIT            6
-#define WPEN                 0
-#define ADC_WPMR             0x400C00E4  /* ADC Write Protect Mode Register */
-#define WPKEY_ADC            0x414443
-
-/* Pointers to access hardware registers */
-uint32_t *const p_ADC_MR = (uint32_t*) ADC_MR;
-uint32_t *const p_ADC_WPMR = (uint32_t*) ADC_WPMR;
-
 /**
  *  Interrupt handler for TC0 interrupt.
  */

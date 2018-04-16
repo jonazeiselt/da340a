@@ -582,12 +582,6 @@
     <None Include="src\ASF\sam\drivers\pdc\pdc_uart_example\pdc_uart_example.h">
       <SubType>compile</SubType>
     </None>
-    <Compile Include="src\real_time_timer.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\real_time_timer.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\sampling.c">
       <SubType>compile</SubType>
     </Compile>

@@ -30,6 +30,7 @@
  */
 #include <asf.h>
 #include <stdio_serial.h>
+#include <inttypes.h>
 #include "conf_board.h"
 #include "adc_with_pdc.h"
 #include "configure_tc.h"
@@ -37,7 +38,7 @@
 #include "trigger_on_amplitude.h"
 #include "timer_counter.h"
 
-#define CHECK_PIN PIO_PB26_IDX	//Arduino Due pin 22 used to measure work load
+//#define CHECK_PIN PIO_PB26_IDX	//Arduino Due pin 22 used to measure work load
 
 
 /**
@@ -72,13 +73,13 @@ int main (void)
 	configure_tc();
 	init_amplitude_trigger();
 	*/
-	TC1CH1_setup_and_kickoff();
+	configure_timerCounter();
 	
 	
 	//do nothing in main()-loop
 	while (1)
 	{
-		printf("Timer Counter value: %u\n", read_counter_value());
+		printf("Timer Counter value: %lu\n", read_counter_value()); //tc_read_cv(TC1, 1)
 		
 	}
 

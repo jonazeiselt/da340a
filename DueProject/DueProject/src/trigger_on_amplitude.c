@@ -17,14 +17,14 @@ void pin_edge_handler(const uint32_t id, const uint32_t index)
 		if (pio_get(PIOB, PIO_TYPE_PIO_INPUT, PIO_PB26)){
 			puts("Amplitude level detected");
 			if(configureDone == 1){ //access external variable, declaration has been done in the included header-file
-				tc_start(TC0, 0); 
+				tc_start(TC0, 0);
 				pio_disable_interrupt(PIOB, PIO_PB26); //disable interrupt for now
-				puts("Sampling has been started");
 			}
 			else{
 				puts("Timer has not been configured!");
 			}
-		}else{
+		}
+		else{
 			puts("------------No edge detected------------");
 		}
 	}
@@ -34,7 +34,7 @@ void pin_edge_handler(const uint32_t id, const uint32_t index)
 
 void init_amplitude_trigger(void){
 	pmc_enable_periph_clk(ID_PIOB);
-	pio_set_input(PIOB, PIO_PB26, PIO_PULLUP); 
+	pio_set_input(PIOB, PIO_PB26, PIO_PULLUP);
 	pio_pull_up(PIOB, PIO_PB26, 0); //enable pull-down, when no input then input state is low
 	pio_handler_set(PIOB, ID_PIOB, PIO_PB26, PIO_IT_EDGE, pin_edge_handler);
 	pio_enable_interrupt(PIOB, PIO_PB26);
