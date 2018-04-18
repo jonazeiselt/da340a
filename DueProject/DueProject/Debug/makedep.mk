@@ -6,9 +6,7 @@ src\ASF\sam\drivers\pdc\pdc.c
 
 src\sampling.c
 
-src\timer_counter.c
-
-src\trigger_on_amplitude.c
+src\amplitude_trigger.c
 
 src\adc_with_pdc.c
 

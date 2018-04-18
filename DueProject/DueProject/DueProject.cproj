@@ -588,16 +588,10 @@
     <Compile Include="src\sampling.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\timer_counter.c">
+    <Compile Include="src\amplitude_trigger.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\timer_counter.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\trigger_on_amplitude.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\trigger_on_amplitude.h">
+    <Compile Include="src\amplitude_trigger.h">
       <SubType>compile</SubType>
     </Compile>
     <None Include="src\ASF\common\services\delay\delay.h">

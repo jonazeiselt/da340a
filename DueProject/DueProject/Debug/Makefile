@@ -99,8 +99,7 @@ SUBDIRS :=  \
 C_SRCS +=  \
 ../src/ASF/sam/drivers/pdc/pdc.c \
 ../src/sampling.c \
-../src/timer_counter.c \
-../src/trigger_on_amplitude.c \
+../src/amplitude_trigger.c \
 ../src/adc_with_pdc.c \
 ../src/ASF/common/services/delay/sam/cycle_counter.c \
 ../src/ASF/common/utils/stdio/read.c \
@@ -136,8 +135,7 @@ ASM_SRCS +=
 OBJS +=  \
 src/ASF/sam/drivers/pdc/pdc.o \
 src/sampling.o \
-src/timer_counter.o \
-src/trigger_on_amplitude.o \
+src/amplitude_trigger.o \
 src/adc_with_pdc.o \
 src/ASF/common/services/delay/sam/cycle_counter.o \
 src/ASF/common/utils/stdio/read.o \
@@ -166,8 +164,7 @@ src/main.o
 OBJS_AS_ARGS +=  \
 src/ASF/sam/drivers/pdc/pdc.o \
 src/sampling.o \
-src/timer_counter.o \
-src/trigger_on_amplitude.o \
+src/amplitude_trigger.o \
 src/adc_with_pdc.o \
 src/ASF/common/services/delay/sam/cycle_counter.o \
 src/ASF/common/utils/stdio/read.o \
@@ -196,8 +193,7 @@ src/main.o
 C_DEPS +=  \
 src/ASF/sam/drivers/pdc/pdc.d \
 src/sampling.d \
-src/timer_counter.d \
-src/trigger_on_amplitude.d \
+src/amplitude_trigger.d \
 src/adc_with_pdc.d \
 src/ASF/common/services/delay/sam/cycle_counter.d \
 src/ASF/common/utils/stdio/read.d \
@@ -226,8 +222,7 @@ src/main.d
 C_DEPS_AS_ARGS +=  \
 src/ASF/sam/drivers/pdc/pdc.d \
 src/sampling.d \
-src/timer_counter.d \
-src/trigger_on_amplitude.d \
+src/amplitude_trigger.d \
 src/adc_with_pdc.d \
 src/ASF/common/services/delay/sam/cycle_counter.d \
 src/ASF/common/utils/stdio/read.d \
@@ -268,8 +263,6 @@ LINKER_SCRIPT_DEP+=  \
 
 
 # AVR32/GNU C Compiler
-
-
 
 
 

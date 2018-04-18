@@ -122,18 +122,13 @@ void ADC_Handler(void){
 	*/
 	if ((adc_get_status(ADC) & ADC_ISR_RXBUFF) == ADC_ISR_RXBUFF) {
 		tc_stop(TC0, 0);  
-		
+		/*
 		for (int i = 0; i < ADC_BUFFER_SIZE; i++)
 		{
 			printf("Buffer values: %u, index: %u\n", adc_buffer_sample_values[i], i);
 		}
-		smooth_values(adc_buffer_sample_values);
-		/*
-		for (int i = 0; i < ADC_BUFFER_SIZE; i++)
-		{
-			printf("Temp buffer: %u, index: %u\n", adc_buffer_sample_values[i], i);
-		}
 		*/
+		smooth_values(adc_buffer_sample_values);
 	    pio_enable_interrupt(PIOB, PIO_PB26); //re-enable edge-level detection 
 		/* Clear sample buffer */
 		memset((void *)&adc_buffer_sample_values, 0, sizeof(adc_buffer_sample_values));

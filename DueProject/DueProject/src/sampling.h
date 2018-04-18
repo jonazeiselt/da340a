@@ -9,6 +9,11 @@
 #ifndef SAMPLING_H_
 #define SAMPLING_H_
 
-//void TC0_Handler(void);
+extern uint32_t edges;
+
+void pin_pulse_handler(const uint32_t id, const uint32_t index);
+void init_pulse_pin(void);
+void TC1_init(void);
+
 
 #endif /* SAMPLING_H_ */
