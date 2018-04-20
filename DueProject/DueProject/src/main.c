@@ -52,7 +52,9 @@ int main (void)
 	//nothing important in main()-loop
 	while (1)
 	{
-		//printf("Timer Counter value: %lu\n", read_counter_value()); //tc_read_cv(TC1, 1)
+		//printf("TC1, ch1 value: %lu\n", tc_read_cv(TC1, 1)); 
+		//printf("TC2, ch2 value: %lu\n", tc_read_cv(TC2, 2));
+
 		
 	}
 
