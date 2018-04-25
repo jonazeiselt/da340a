@@ -27,7 +27,7 @@ int main (void)
 	*/
 
 	/* Fill array with sample values */
-	int32_t sampleValues = 256;
+	int32_t sampleValues = 160;
 
 	int32_t x[sampleValues];
 	for (int32_t i = 0; i < sampleValues; i++)
@@ -42,10 +42,10 @@ int main (void)
 	int32_t nbrOfSamples = sizeof(x)/sizeof(int32_t);
 
 	/* Calculate frequency */
-	double sampleFrequency = 10000.00; // ~10 kHz
+	double sampleFrequency = 10000.00; // ~10 kHz (1/100 us)
 	
-	int32_t offset = 500, halfWindow = 1; // 500 mV
-	calc_init(halfWindow, offset);
+	int32_t offset = 500, filterPoints = 5; // 500 mV, 5 point moving avg filter
+	calc_init(filterPoints, offset);
 	
 	double frequency = calc_frequency(x, nbrOfSamples, sampleFrequency);
 	printf("Frequency: %s Hz\n", get_decimal_string(frequency));

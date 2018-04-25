@@ -11,21 +11,21 @@
 #include "calc_frequency.h"
 #include "dec_string.h"
 
-static int32_t filterPoints = 0;
+static int32_t windowSize = 0;
 static int32_t halfWindow = 0;
 
 static int32_t bitOffset = 0;
 
 /* Calculate offset in bits */
-void calc_init(int32_t hWindow, int32_t voltOffset)
+void calc_init(int32_t filterPoints, int32_t voltOffset)
 {
-	halfWindow = hWindow;
-	filterPoints = (halfWindow*2)+1;
+	windowSize = filterPoints;
+	halfWindow = filterPoints/2;
 
-	float offsetRatio = 4095.0/3300.0;
+	double offsetRatio = 4095.0/3300.0;
 	bitOffset = offsetRatio*voltOffset;
 
-	printf("Points = %d\n", filterPoints);
+	printf("Points = %d\n", windowSize);
 	printf("Offset is %d\n", bitOffset);
 }
 
@@ -43,13 +43,13 @@ double calc_frequency(int32_t x[], int32_t nbrOfSamples, double Fs)
 	// Filter and determine zero crossings
 	for (int32_t i = halfWindow; i < lim; i++)
 	{
-		y[i] = 0;
+		y[i] = bitOffset;
 		for (int32_t j = -halfWindow; j < halfWindow; j++) 
 		{
 			y[i] = y[i] + x[i+j];
 			printf("Add %d: %d\n", i, y[i]);
 		}
-		y[i] = y[i]/filterPoints;
+		y[i] = y[i]/windowSize;
 		printf("Result %d: %d\n", i, y[i]);
 		
 		// compare y[i] to a previous value?

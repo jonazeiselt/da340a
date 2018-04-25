@@ -10,7 +10,7 @@
 
 #include <inttypes.h>
 
-void calc_init(int32_t hWindow, int32_t voltOffset);
+void calc_init(int32_t filterPoints, int32_t voltOffset);
 double calc_frequency(int32_t values[], int32_t nbrOfSamples, double Fs);
 
 int32_t getSign(int32_t data);
