@@ -19,7 +19,7 @@ void configure_tc(void)
 	/* Configure TC for a 500 kHz frequency and trigger on RC compare. */
 	tc_init(TC0, 0, 0 | TC_CMR_CPCTRG);			//Timer_clock_1 - MCK/2 - 42 MHz (internal clock signal)
 	tc_write_rc(TC0, 0, 84);					//84 corresponds to fs = 500 kHz (42 MHz/84 = 500 kHz)
-
+	
 	/* Configure and enable interrupt on RC compare:
 	 * A trigger resets the counter and starts the counter clock. RC Compare Trigger is implemented 
 	 * in each channel and can provide a trigger when the counter value matches the RC value.

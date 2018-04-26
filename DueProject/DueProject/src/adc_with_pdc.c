@@ -14,13 +14,14 @@
 #include <asf.h>
 #include "adc_with_pdc.h"
 #include "configure_tc.h"
+#include "calc_frequency.h"
+#include "dec_string.h"
 #include <string.h>
 #include <inttypes.h>
 
 #define M  2
 static float xbuff[M+1] = {0}; // delayed values of input signal
 static float b[M+1] = {0.3333, 0.3333, 0.3333}; //filter coefficients, gain = 1
-
 
 /**
 * \brief Read converted data through PDC channel.
@@ -29,7 +30,7 @@ static float b[M+1] = {0.3333, 0.3333, 0.3333}; //filter coefficients, gain = 1
 * \param p_s_buffer The destination buffer.
 * \param ul_size The size of the buffer.
 */
-static uint32_t adc_read_buffer(Adc * p_adc, uint16_t * p_s_buffer, uint32_t ul_size)
+static uint32_t adc_read_buffer(Adc * p_adc, int16_t * p_s_buffer, uint32_t ul_size)
 {
 	/* Check if the first PDC bank is free: if so start transferring data to it.
 	* Counters are decremented until data has been completely transferred to buffer.
@@ -75,7 +76,7 @@ void adc_setup()
 	*/
 	adc_configure_timing(ADC, TRACKING_TIME, SETTLING_TIME, TRANSFER_TIME);
 	adc_set_resolution(ADC, ADC_MR_LOWRES_BITS_12);
-	adc_enable_channel(ADC, ADC_CHANNEL_10);			//PB17 - AD8 for Arduino Due
+	adc_enable_channel(ADC, ADC_CHANNEL_0);			//PB17 - AD8 for Arduino Due
 	/* Trigger conversion just by software */
 	adc_configure_trigger(ADC, ADC_TRIG_SW, 0);
 	/* Start transferring converted data to buffer */
@@ -86,7 +87,7 @@ void adc_setup()
 	NVIC_EnableIRQ(ADC_IRQn);
 }
 
-static void smooth_values(uint16_t *buffer)
+static void smooth_values(int16_t *buffer)
 {
 	uint16_t temp_buff[ADC_BUFFER_SIZE];
 	uint16_t invalue, outvalue;
@@ -122,13 +123,20 @@ void ADC_Handler(void){
 	*/
 	if ((adc_get_status(ADC) & ADC_ISR_RXBUFF) == ADC_ISR_RXBUFF) {
 		tc_stop(TC0, 0);  
-		/*
+		int max = 0;
+		int index = 0;
 		for (int i = 0; i < ADC_BUFFER_SIZE; i++)
 		{
-			printf("Buffer values: %u, index: %u\n", adc_buffer_sample_values[i], i);
+			if(adc_buffer_sample_values[i] > max){
+				max = adc_buffer_sample_values[i];
+				index = i;
+			}
+			//printf("Buffer values: %u, index: %u\n", adc_buffer_sample_values[i], i);
 		}
-		*/
-		smooth_values(adc_buffer_sample_values);
+		printf("Max buffer value: %u, index: %u\n", max, index);
+		//double frequency = calc_frequency(adc_buffer_sample_values, ADC_BUFFER_SIZE, sampel_frequency);
+		//smooth_values(adc_buffer_sample_values);
+		//printf("Frequency: %s Hz\n", get_decimal_string(frequency));
 	    pio_enable_interrupt(PIOB, PIO_PB26); //re-enable edge-level detection 
 		/* Clear sample buffer */
 		memset((void *)&adc_buffer_sample_values, 0, sizeof(adc_buffer_sample_values));

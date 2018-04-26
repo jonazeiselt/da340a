@@ -98,6 +98,10 @@ SUBDIRS :=  \
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../src/ASF/sam/drivers/pdc/pdc.c \
+../src/calc_frequency.c \
+../src/dec_string.c \
+../src/tdoa.c \
+../src/tdoa_2d.c \
 ../src/sampling.c \
 ../src/amplitude_trigger.c \
 ../src/adc_with_pdc.c \
@@ -134,6 +138,10 @@ ASM_SRCS +=
 
 OBJS +=  \
 src/ASF/sam/drivers/pdc/pdc.o \
+src/calc_frequency.o \
+src/dec_string.o \
+src/tdoa.o \
+src/tdoa_2d.o \
 src/sampling.o \
 src/amplitude_trigger.o \
 src/adc_with_pdc.o \
@@ -163,6 +171,10 @@ src/main.o
 
 OBJS_AS_ARGS +=  \
 src/ASF/sam/drivers/pdc/pdc.o \
+src/calc_frequency.o \
+src/dec_string.o \
+src/tdoa.o \
+src/tdoa_2d.o \
 src/sampling.o \
 src/amplitude_trigger.o \
 src/adc_with_pdc.o \
@@ -192,6 +204,10 @@ src/main.o
 
 C_DEPS +=  \
 src/ASF/sam/drivers/pdc/pdc.d \
+src/calc_frequency.d \
+src/dec_string.d \
+src/tdoa.d \
+src/tdoa_2d.d \
 src/sampling.d \
 src/amplitude_trigger.d \
 src/adc_with_pdc.d \
@@ -221,6 +237,10 @@ src/main.d
 
 C_DEPS_AS_ARGS +=  \
 src/ASF/sam/drivers/pdc/pdc.d \
+src/calc_frequency.d \
+src/dec_string.d \
+src/tdoa.d \
+src/tdoa_2d.d \
 src/sampling.d \
 src/amplitude_trigger.d \
 src/adc_with_pdc.d \
@@ -263,6 +283,14 @@ LINKER_SCRIPT_DEP+=  \
 
 
 # AVR32/GNU C Compiler
+
+
+
+
+
+
+
+
 
 
 
