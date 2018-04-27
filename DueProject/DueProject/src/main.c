@@ -12,6 +12,9 @@
 #include "configure_tc.h"
 #include "sampling.h"
 #include "amplitude_trigger.h"
+#include "calc_frequency.h"
+#include "tdoa.h"
+#include "dec_string.h"
 
 
 /**
@@ -39,15 +42,31 @@ int main (void)
 	sysclk_init();
 	board_init();
 	configureConsole();
+	/*
+	tdoa_init();
+	double ti = 2.578327; //(double)42035700*((float)1/42000000);
+	double tj = 1.376376; //(double)42000000*((float)1/42000000);
+	double tk = 4.488732; //(double)41815200*((float)1/42000000);
+	double tl = 0.678136; //(double)41746740*((float)1/42000000);
+	printf("ti: %s, tj: %s, tk: %s, tl: %s\n", get_decimal_string(ti), get_decimal_string(tj), get_decimal_string(tk), get_decimal_string(tl));
+	set_tdoa(ti, tj, tk, tl); //set_tdoa(1.00085, 1, 0.9956, 0.99397);
+	double x = 0;
+	double y = 0;
+	double z = 0;
+	calculate_position(&x, &y, &z);
+	printf("x-coord: %s \n", get_decimal_string(x));
+	printf("y-coord: %s \n", get_decimal_string(y));
+	printf("z-coord: %s \n", get_decimal_string(z));
+	*/
 	
 	ioport_init();
-	adc_setup();
+	tdoa_init();
+	//calc_init(5, 1650);
+	//adc_setup(); 
 	configure_tc();
-	init_amplitude_trigger();
 	init_pulse_pin();
+	init_amplitude_trigger();
 	TC1_init();
-
-	
 	
 	//nothing important in main()-loop
 	while (1)
