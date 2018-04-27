@@ -8,7 +8,7 @@
 const byte ledPin = 13;
 const byte transmitPin = 8;
 
-double timeIntervalMs = 1000;
+double timeIntervalMs = 200;
 double delayDurationMs = 0;
 
 void setup()
