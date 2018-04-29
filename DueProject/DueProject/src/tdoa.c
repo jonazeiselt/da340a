@@ -12,23 +12,58 @@
 #include <asf.h>
 #include <inttypes.h>
 #include <stdio.h>
-#include "tdoa.h"
 #include <complex.h>
-#include <machine\fastmath.h>
 #include <math.h>
+#include "tdoa.h"
 
 uint32_t fs = 500000;
 
-struct transmitter_coord
-{
+struct transmitter_coord {
 	double xi, xj, xk, xl;
 	double yi, yj, yk, yl;
 	double zi, zj, zk, zl;
-}coord_t;
+} coord_t;
 
-struct tdoa{
+struct tdoa {
 	double tij, tik, tkj, tkl;
-}tdoa_t;
+} tdoa_t;
+
+static double v = 343;
+
+static double Rik;
+static double Rij;
+static double Rkl;
+static double Rkj;
+
+static double xji;
+static double xki;
+static double xjk;
+static double xlk;
+
+static double yji;
+static double yki;
+static double yjk;
+static double ylk;
+
+static double zji;
+static double zki;
+static double zjk;
+static double zlk;
+
+static double powXi;
+static double powXj;
+static double powXk;
+static double powXl;
+
+static double powYi;
+static double powYj;
+static double powYk;
+static double powYl;
+
+static double powZi;
+static double powZj;
+static double powZk;
+static double powZl;
 
 void tdoa_init()
 {
@@ -47,96 +82,107 @@ void tdoa_init()
 	coord_t.zk = 2;
 	coord_t.zl = 2;
 
+	xji = coord_t.xj - coord_t.xi;
+	xki = coord_t.xk - coord_t.xi;
+	xjk = coord_t.xj - coord_t.xk;
+	xlk = coord_t.xl - coord_t.xk;
+
+	yji = coord_t.yj - coord_t.yi;
+	yki = coord_t.yk - coord_t.yi;
+	yjk = coord_t.yj - coord_t.yk;
+	ylk = coord_t.yl - coord_t.yk;
+
+	zji = coord_t.zj - coord_t.zi;
+	zki = coord_t.zk - coord_t.zi;
+	zjk = coord_t.zj - coord_t.zk;
+	zlk = coord_t.zl - coord_t.zk;
+
+	powXi = pow2(coord_t.xi);
+	powXj = pow2(coord_t.xj);
+	powXk = pow2(coord_t.xk);
+	powXl = pow2(coord_t.xl);
+
+	powYi = pow2(coord_t.yi);
+	powYj = pow2(coord_t.yj);
+	powYk = pow2(coord_t.yk);
+	powYl = pow2(coord_t.yl);
+
+	powZi = pow2(coord_t.zi);
+	powZj = pow2(coord_t.zj);
+	powZk = pow2(coord_t.zk);
+	powZl = pow2(coord_t.zl);
 }
 
-void set_tdoa(double ti, double tj, double tk, double tl){
+void set_tdoa(double ti, double tj, double tk, double tl)
+{
+	// tj = 1, ti = 1.00085, tk = 0.9956, tl = 0.99397
+	tdoa_t.tij = ti-tj; //0.00085;
+	tdoa_t.tik = ti-tk; //0.00525;
+	tdoa_t.tkj = tk-tj; //-0.0044;
+	tdoa_t.tkl = tk-tl; //0.00163;
 
-    tdoa_t.tij = ti-tj; //0.00085; tj = 1, ti = 1.00085, tk = 0.9956, tl = 0.99397
-    tdoa_t.tik = ti-tk; //0.00525;
-    tdoa_t.tkj = tk-tj; //-0.0044;
-    tdoa_t.tkl = tk-tl; //0.00163;
+	Rij = v * tdoa_t.tij;
+	Rik = v * tdoa_t.tik;
+	Rkj = v * tdoa_t.tkj;
+	Rkl = v * tdoa_t.tkl;
 }
 
-/*
 void set_sdoa(double sample_i, double sample_j, double sample_k, double sample_l)
 {
-    
 	tdoa_t.tij = (sample_i-sample_j)/fs;
 	tdoa_t.tik = (sample_i-sample_k)/fs;
 	tdoa_t.tkj = (sample_k-sample_j)/fs;
 	tdoa_t.tkl = (sample_k-sample_l)/fs;
 
+	Rij = v * tdoa_t.tij;
+	Rik = v * tdoa_t.tik;
+	Rkj = v * tdoa_t.tkj;
+	Rkl = v * tdoa_t.tkl;
 }
-*/
+
 void calculate_position(double *x, double *y, double *z)
 {
-	double v = 343;
-	/*
-	double di = 1.939;
-	double dj = 3.4264;
-	double dk = 2.7821;
-	double dl = 3.9674;
+	double Yi = (Rij*yki)-(Rik*yji);
+	double Yk = (Rkj*ylk)-(Rkl*yjk);
+
+	double powRij = pow2(Rij);
+	double powRik = pow2(Rik);
+	double powRkj = pow2(Rkj);
+	double powRkl = pow2(Rkl);
+
+	double A = (Rik*xji-Rij*xki)/Yi;
+	double B = (Rik*zji-Rij*zki)/Yi;
+	double C = (Rik*(powRij+powXi-powXj+powYi-powYj+powZi-powZj) - (Rij*(powRik+powXi-powXk+powYi-powYk+powZi-powZk)))/(2*Yi);
 	
-	double di = 4.2308;
-	double dj = 3.9370;
-	double dk = 2.4290;
-	double dl = 1.8708;
-	*/
-
-	/*
-	double Rik = v*tdoa_t.tik;
-	double Rij = v*tdoa_t.tij;
-	double Rkl = v*tdoa_t.tkl;
-	double Rkj = v*tdoa_t.tkj;
-	*/
-	double Rik = v*tdoa_t.tik;
-	double Rij = v*tdoa_t.tij;
-	double Rkl = v*tdoa_t.tkl;
-	double Rkj = v*tdoa_t.tkj;
-
-	double xji = coord_t.xj - coord_t.xi;
-	double xki = coord_t.xk - coord_t.xi;
-	double xjk = coord_t.xj - coord_t.xk;
-	double xlk = coord_t.xl - coord_t.xk;
-
-	double yji = coord_t.yj - coord_t.yi;
-	double yki = coord_t.yk - coord_t.yi;
-	double yjk = coord_t.yj - coord_t.yk;
-	double ylk = coord_t.yl - coord_t.yk;
-
-	double zji = coord_t.zj - coord_t.zi;
-	double zki = coord_t.zk - coord_t.zi;
-	double zjk = coord_t.zj - coord_t.zk;
-	double zlk = coord_t.zl - coord_t.zk;
-
-
-	double A = (Rik*xji-Rij*xki)/(Rij*yki-Rik*yji);
-	double B = (Rik*zji-Rij*zki)/(Rij*yki-Rik*yji);
-	double C = (Rik*(Rij*Rij + (coord_t.xi*coord_t.xi) - (coord_t.xj*coord_t.xj) + (coord_t.yi*coord_t.yi) - (coord_t.yj*coord_t.yj) + (coord_t.zi*coord_t.zi) -
-	(coord_t.zj*coord_t.zj)) - (Rij*(Rik*Rik + (coord_t.xi*coord_t.xi) - (coord_t.xk*coord_t.xk) + (coord_t.yi*coord_t.yi) - (coord_t.yk*coord_t.yk) +
-	(coord_t.zi*coord_t.zi) - (coord_t.zk*coord_t.zk))))/(2*(Rij*yki-Rik*yji));
-	double D = (Rkl*xjk-Rkj*xlk)/(Rkj*ylk-Rkl*yjk);
-	double E = (Rkl*zjk-Rkj*zlk)/(Rkj*ylk-Rkl*yjk);
-	double F = (Rkl*(Rkj*Rkj + (coord_t.xk*coord_t.xk) - (coord_t.xj*coord_t.xj) + (coord_t.yk*coord_t.yk) - (coord_t.yj*coord_t.yj) + (coord_t.zk*coord_t.zk) -
-	(coord_t.zj*coord_t.zj))-(Rkj*(Rkl*Rkl + (coord_t.xk*coord_t.xk) - (coord_t.xl*coord_t.xl) + (coord_t.yk*coord_t.yk) -
-	(coord_t.yl*coord_t.yl) + (coord_t.zk*coord_t.zk) - (coord_t.zl*coord_t.zl))))/(2*(Rkj*ylk-Rkl*yjk));
+	double D = (Rkl*xjk-Rkj*xlk)/Yk;
+	double E = (Rkl*zjk-Rkj*zlk)/Yk;
+	double F = (Rkl*(powRkj+powXk-powXj+powYk-powYj+powZk-powZj) - (Rkj*(powRkl+powXk-powXl+powYk-powYl+powZk-powZl)))/(2*Yk);
+	
 	double G = (E-B)/(A-D);
 	double H = (F-C)/(A-D);
 	double W = A*G + B;
 	double J = A*H + C;
-	double K = Rik*Rik + (coord_t.xi*coord_t.xi) - (coord_t.xk*coord_t.xk) + (coord_t.yi*coord_t.yi) - (coord_t.yk*coord_t.yk) +
-	(coord_t.zi*coord_t.zi) - (coord_t.zk*coord_t.zk) + 2*xki*H+2*yki*J;
+	
+	double K = powRik + powXi - powXk + powYi - powYk + powZi - powZk + 2 * xki * H + 2 * yki * J;
 	double L = 2*(xki*G+yki*W+2*zki);
-	double M = 4*Rik*Rik*(G*G+W*W+1)-L*L;
-	double N = 8*Rik*Rik*(G*(coord_t.xi-H) + W*(coord_t.yi-J) + coord_t.zi) + (2*L*K);
-	double O = 4*Rik*Rik*(((coord_t.xi-H)*(coord_t.xi-H)) + ((coord_t.yi-J)*(coord_t.yi-J)) + coord_t.zi*coord_t.zi) - K*K;
+	double M = 4*powRik*(pow2(G)+pow2(W)+1)-pow2(L);
+	double N = 8*powRik*(G*(coord_t.xi-H) + W*(coord_t.yi-J) + coord_t.zi) + (2*L*K);
+	double O = 4*powRik*(pow2(coord_t.xi-H) + pow2(coord_t.yi-J) + pow2(coord_t.zi)) - pow2(K);
 
-	//z1 = (N/(2*M))+sqrt((N/(2*M))^2-(O/M))
-	double complex Imz = (N/(2*M))+csqrt((N/(2*M))*(N/(2*M))-(O/M));
-	double complex Imx = G*(Imz) + H;
-	double complex Imy = W*(Imz) + J; 
-	*z = crealf(Imz); //crealf(Imz);
+	double n2m = N/(2*M), om = O/M;
+	// Imz = n2m + sqrt(pow2(n2m) - om);
+	
+	double complex Imz = n2m - csqrt(pow2(n2m) - om);
+	double complex Imx = G * Imz + H;
+	double complex Imy = W * Imz + J;
+
+	*z = crealf(Imz);
 	*x = crealf(Imx);
 	*y = crealf(Imy);
 }
 
+/* Math function for raising x to the power of 2 */
+double pow2(double x)
+{
+	return x*x;
+}
