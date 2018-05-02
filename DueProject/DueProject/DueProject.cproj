@@ -589,12 +589,6 @@
     <Compile Include="src\ASF\sam\drivers\pdc\pdc.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\calc_frequency.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\calc_frequency.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\dec_string.c">
       <SubType>compile</SubType>
     </Compile>
@@ -605,12 +599,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\tdoa.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\tdoa_2d.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\tdoa_2d.h">
       <SubType>compile</SubType>
     </Compile>
     <None Include="src\ASF\sam\drivers\pdc\pdc.h">

@@ -4,13 +4,9 @@
 
 src\ASF\sam\drivers\pdc\pdc.c
 
-src\calc_frequency.c
-
 src\dec_string.c
 
 src\tdoa.c
-
-src\tdoa_2d.c
 
 src\sampling.c
 

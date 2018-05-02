@@ -12,7 +12,6 @@
 #include "configure_tc.h"
 #include "sampling.h"
 #include "amplitude_trigger.h"
-#include "calc_frequency.h"
 #include "tdoa.h"
 #include "dec_string.h"
 

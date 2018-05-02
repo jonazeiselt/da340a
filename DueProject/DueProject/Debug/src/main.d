@@ -143,8 +143,8 @@ src/main.d src/main.o: ../src/main.c ../src/asf.h \
  ../src/ASF/sam/drivers/pio/pio_handler.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\inttypes.h \
  ../src/config/conf_board.h ../src/adc_with_pdc.h ../src/configure_tc.h \
- ../src/sampling.h ../src/amplitude_trigger.h ../src/calc_frequency.h \
- ../src/tdoa.h ../src/dec_string.h
+ ../src/sampling.h ../src/amplitude_trigger.h ../src/tdoa.h \
+ ../src/dec_string.h
 
 ../src/asf.h:
 
@@ -455,8 +455,6 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 ../src/sampling.h:
 
 ../src/amplitude_trigger.h:
-
-../src/calc_frequency.h:
 
 ../src/tdoa.h:
 
