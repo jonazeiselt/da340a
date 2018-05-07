@@ -14,7 +14,7 @@
 	char *string = malloc(20);
 
 	memset(string, 0, 20);
-	sprintf(string, "%0.6f", in);
+	sprintf(string, "%0.10f", in);
 
 	return string;
  }

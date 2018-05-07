@@ -26,7 +26,7 @@ void configure_tc(void)
 	 */
 	NVIC_EnableIRQ((IRQn_Type) ID_TC0);
 	tc_enable_interrupt(TC0, 0, TC_IER_CPCS); //CPCS is 5th bit (nr 4) in  TC Interrupt Enable Register (TC_IER0, ch 0: 0x40080024)
-
+	tc_start(TC0, 0);
 	configureDone = 1;
 
 }

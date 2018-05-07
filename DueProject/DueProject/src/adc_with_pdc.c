@@ -14,7 +14,6 @@
 #include <asf.h>
 #include "adc_with_pdc.h"
 #include "configure_tc.h"
-#include "calc_frequency.h"
 #include "dec_string.h"
 #include <string.h>
 #include <inttypes.h>

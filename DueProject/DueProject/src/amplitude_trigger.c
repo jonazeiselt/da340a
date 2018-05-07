@@ -13,32 +13,50 @@
 #include "amplitude_trigger.h"
 #include "dec_string.h"
 
-uint32_t signal_arrival_time = 0;
+uint32_t signal_arrival_time, beaconCounter = 0;
+uint32_t previous_signal_time = 0;
 
 void pin_edge_handler(const uint32_t id, const uint32_t index)
 {
 	if ((id == ID_PIOB) && (index == PIO_PB26)){
 		if (pio_get(PIOB, PIO_TYPE_PIO_INPUT, PIO_PB26)){
 			//puts("Amplitude level detected");
-			/*
-			long double t21 = (long double) (second_signal-first_signal)/42000000;
-			long double t31 = (long double) (third_signal-first_signal)/42000000;
-			printf("TDOA 2-1: %s\n", get_decimal_string(t21));
-			printf("TDOA 3-1: %s\n", get_decimal_string(t31));
-			*/
 			signal_arrival_time = tc_read_cv(TC2, 2);
+			
+			switch(beaconCounter){
+				case 0:
+				/*remove echoes*/
+				if ((signal_arrival_time-previous_signal_time) >= 688800) //&& (signal_arrival_time-previous_signal_time) <= 905000)
+				{
+					beaconCounter++;
+					previous_signal_time = signal_arrival_time;
+				}
+				break;
+				case 1:
+				if ((signal_arrival_time-previous_signal_time) >= 688800) //&& (signal_arrival_time-previous_signal_time) <= 905000)
+				{
+					beaconCounter++;
+					previous_signal_time = signal_arrival_time;
+				}
+				break;
+				case 2:
+				if ((signal_arrival_time-previous_signal_time) >= 688800) //&& (signal_arrival_time-previous_signal_time) <= 905000)
+				{
+					beaconCounter++;
+					previous_signal_time = signal_arrival_time;
+				}
+				break;
+				case 3:
+				if ((signal_arrival_time-previous_signal_time) >= 688800) //&& (signal_arrival_time-previous_signal_time) <= 905000)
+				{
+					beaconCounter = 0;
+					previous_signal_time = signal_arrival_time;
+				}
+				break;
+			}
+			
 			pio_enable_interrupt(PIOA, PIO_PA14); //estimate frequency
 			pio_disable_interrupt(PIOB, PIO_PB26);
-			
-			/*
-			if(configureDone == 1){ //access external variable, declaration has been done in the included h-file
-			tc_start(TC0, 0);
-			pio_disable_interrupt(PIOB, PIO_PB26); //disable interrupt for now
-			}
-			else{
-			puts("Timer has not been configured!");
-			}
-			*/
 		}
 		else{
 			//puts("------------No edge detected------------");

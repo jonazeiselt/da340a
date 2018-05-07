@@ -11,7 +11,6 @@
 
 void tdoa_init(void);
 void set_tdoa(double ti, double tj, double tk, double tl);
-void set_sdoa(double sample_i, double sample_j, double sample_k, double sample_l);
 void calculate_position(double *x, double *y, double *z);
 
 double pow2(double x);

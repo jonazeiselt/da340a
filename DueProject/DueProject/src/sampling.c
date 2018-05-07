@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include "sampling.h"
 #include "amplitude_trigger.h"
-//#include "tdoa_2d.h"
 #include "dec_string.h"
 #include "tdoa.h"
 
@@ -37,34 +36,11 @@ void TC0_Handler(void)
 	/* Start sampling (i.e. convert one sample value) */
 	adc_start(ADC);
 }
-/*
-void determine_tdoa(double b1, double b2, double b3)
-{
-	puts("Calculating TDOA");
-	//double time_diff_between_beacon2_and_beacon1 = (double) (b2-b1)/42000000;
-	//double time_diff_between_beacon3_and_beacon1 = (double) (b3-b1)/42000000;
-	printf("TDOA 2-1: %s\n", get_decimal_string(time_diff_between_beacon2_and_beacon1));
-	printf("TDOA 3-1: %s\n", get_decimal_string(time_diff_between_beacon3_and_beacon1));
-	//duration of ultrasound waves must be shorter than TDOA to prevent overlap of signals
-	//calculate_position(time_diff_between_beacon2_and_beacon1, time_diff_between_beacon3_and_beacon1);
-	
-	if ((ulPulse.signal1 < t21) && (ulPulse.signal2 < (t31-t21)))
-	{
-		calculate_position(t21, t31);
-	}
-	else
-	{
-		puts("The ultrasound signals overlap!");
-	}
-	
-}
-*/
+
 void pin_high_pulse_handler(const uint32_t id, const uint32_t index)
 {
 	static uint32_t frequency = 0;
-	static float period = 0;
 	static double beacon_1_time, beacon_2_time, beacon_3_time, beacon_4_time;
-	static int flag1, flag2, flag3, flag4 = 0;
 	if ((id == ID_PIOA) && (index == PIO_PA14)){
 		if (pio_get(PIOA, PIO_TYPE_PIO_INPUT, PIO_PA14))
 		{
@@ -80,68 +56,42 @@ void pin_high_pulse_handler(const uint32_t id, const uint32_t index)
 				frequency = 42000000/(top_to_low/(CYCLE_INTERVAL-1));
 				//printf("Frequency: %lu Hz\n", frequency);
 				rising_edges = 0;
-				//period = (long double) 1/frequency;
-				if ((flag1 == 0) && ((frequency >= 38500) && (frequency <= 42000)))
+				if ((frequency >= 38500) && (frequency <= 41500))
 				{
-					flag1 = 1; // we will not register anymore frequencies from beacon 1
-					//ulPulse.signal1 = period*(CYCLE_INTERVAL-1);
-					beacon_1_time = (double)signal_arrival_time;
-					printf("Frequency - beacon 1: %lu Hz\n", frequency);
-					//printf("Period - beacon 1: %s sec\n", get_decimal_string(period));
-					//printf("Signal length - beacon 1: %s sec\n", get_decimal_string(ulPulse.signal1));
-				}
-				else if ((flag2 == 0) && ((frequency >= 42500) && (frequency <= 48500)))
-				{
-					flag2 = 1;
-					//ulPulse.signal2 = period*(CYCLE_INTERVAL-1);
-					beacon_2_time = (double)signal_arrival_time;
-					printf("Frequency - beacon 2: %lu Hz\n", frequency);
-					//printf("Period - beacon 2: %s sec\n", get_decimal_string(period));
-					//printf("Signal length - beacon 2: %s sec\n", get_decimal_string(ulPulse.signal2));
-				}
-				else if ((flag3 == 0) && ((frequency >= 51000) && (frequency <= 55000)))
-				{
-					flag3 = 1;
-					//ulPulse.signal3 = period*(CYCLE_INTERVAL-1);
-					beacon_3_time = (double)signal_arrival_time;
-					printf("Frequency - beacon 3: %lu Hz\n", frequency);
-					//printf("Period - beacon 3: %s sec\n", get_decimal_string(period));
-					//printf("Signal length - beacon 3: %s sec\n", get_decimal_string(ulPulse.signal3));
-				}
-				else if ((flag4 == 0) && ((frequency >= 56000) && (frequency <= 59000)))
-				{
-					flag4 = 1;
-					//ulPulse.signal3 = period*(CYCLE_INTERVAL-1);
-					beacon_4_time = (double)signal_arrival_time;
-					printf("Frequency - beacon 4: %lu Hz\n", frequency);
-					//printf("Period - beacon 3: %s sec\n", get_decimal_string(period));
-					//printf("Signal length - beacon 3: %s sec\n", get_decimal_string(ulPulse.signal3));
-				}
-				
-				if (flag1 && flag2 && flag3 & flag4)
-				{
-					//puts("All three frequencies found");
-					//determine_tdoa(beacon_1_time, beacon_2_time, beacon_3_time, beacon_4_time); //pass struct by value?
-					double b1_in_sec = (float)beacon_1_time*((float)1/42000000);
-					double b2_in_sec = (float)beacon_2_time*((float)1/42000000);
-					double b3_in_sec = (float)beacon_3_time*((float)1/42000000);
-					double b4_in_sec = (float)beacon_4_time*((float)1/42000000);
-					printf("Beacon 1 signal: %s\n", get_decimal_string(b1_in_sec));
-					printf("Beacon 2 signal: %s\n", get_decimal_string(b2_in_sec));
-					printf("Beacon 3 signal: %s\n", get_decimal_string(b3_in_sec));
-					printf("Beacon 4 signal: %s\n", get_decimal_string(b4_in_sec));
-					set_tdoa(b1_in_sec, b2_in_sec, b3_in_sec, b4_in_sec);
-					flag1 = 0;
-					flag2 = 0;
-					flag3 = 0;
-					flag4 = 0; //register new frequencies
-					double x = 0;
-					double y = 0;
-					double z = 0;
-					calculate_position(&x, &y, &z);
-					printf("x-coord: %s \n", get_decimal_string(x));
-					printf("y-coord: %s \n", get_decimal_string(y));
-					printf("z-coord: %s \n", get_decimal_string(z));
+					switch(beaconCounter){
+						case 0:
+						beacon_1_time = signal_arrival_time; //threshold voltage value reacts after 7th period
+						break;
+						case 1:
+						beacon_2_time = signal_arrival_time;
+						break;
+						case 2:
+						beacon_3_time = signal_arrival_time;
+						break;
+						case 3:
+						beacon_4_time = signal_arrival_time;
+						uint32_t start = tc_read_cv(TC2, 2);
+						double b1_in_sec = (float)beacon_1_time*((float)1/42000000)-0.0002; //remove certain periods to get real TDOA values
+						double b2_in_sec = (float)beacon_2_time*((float)1/42000000)-0.000375;
+						double b3_in_sec = (float)beacon_3_time*((float)1/42000000)-0.0002;
+						double b4_in_sec = (float)beacon_4_time*((float)1/42000000)-0.000225;
+						printf("B2-B1: %s ms\n", get_decimal_string((b2_in_sec-b1_in_sec)*1000));
+						printf("B3-B2: %s ms\n", get_decimal_string((b3_in_sec-b2_in_sec)*1000));
+						printf("B4-B3: %s ms\n", get_decimal_string((b4_in_sec-b3_in_sec)*1000));
+						set_tdoa(b1_in_sec, b2_in_sec-0.02, b3_in_sec-0.04, b4_in_sec-0.06);
+						double x = 0;
+						double y = 0;
+						double z = 0;
+						calculate_position(&x, &y, &z);
+						printf("x-coord: %s \n", get_decimal_string(x));
+						printf("y-coord: %s \n", get_decimal_string(y));
+						printf("z-coord: %s \n", get_decimal_string(z));
+						printf("-----------------------------------------\n"); 		
+						uint32_t stop = tc_read_cv(TC2, 2);
+						uint32_t result = stop - start;
+						printf("Time it takes: %s ms\n", get_decimal_string((float)result*((float)1/42000000)*1000));	
+						break;
+					}
 				}
 				pio_enable_interrupt(PIOB, PIO_PB26);
 				
