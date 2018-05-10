@@ -5,18 +5,25 @@
    Date: 2018-04-27
 */
 
-const byte ledPin = 13;
-const byte transmitPin = 8;
+const byte slave1Pin = 8;
+const byte slave2Pin = 9;
+const byte slave3Pin = 10;
+const byte slave4Pin = 11;
 
-double timeIntervalMs = 200;
-double delayDurationMs = 0;
+int slaveCounter = 0;
 
 void setup()
 {
-  delayDurationMs = timeIntervalMs / 2;
+  Serial.begin(9600);
 
-  pinMode(ledPin, OUTPUT);
-  pinMode(transmitPin, OUTPUT);
+  pinMode(slave1Pin, OUTPUT);
+  pinMode(slave2Pin, OUTPUT);
+  pinMode(slave3Pin, OUTPUT);
+  pinMode(slave4Pin, OUTPUT);
+
+  Serial.println("Enter s to start");
+  while (Serial.read() != 's');
+  Serial.println("Running..");
 }
 
 /*
@@ -25,11 +32,16 @@ void setup()
 */
 void loop()
 {
-  digitalWrite(ledPin, HIGH);
-  digitalWrite(transmitPin, HIGH);
-  delay(delayDurationMs);
+  if (slaveCounter == 4)
+  {
+    slaveCounter = 0;
+    // delay(40);
+  }
 
-  digitalWrite(ledPin, LOW);
-  digitalWrite(transmitPin, LOW);
-  delay(delayDurationMs);
+  int slavePin = 8 + slaveCounter;
+  digitalWrite(slavePin, HIGH);
+  delay(20);
+  digitalWrite(slavePin, LOW);
+
+  slaveCounter++;
 }
