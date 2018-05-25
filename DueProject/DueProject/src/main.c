@@ -62,10 +62,11 @@ int main (void)
 	tdoa_init();
 	//calc_init(5, 1650);
 	//adc_setup(); 
-	configure_tc();
+	//configure_tc();
+	TC1_init();
 	init_pulse_pin();
 	init_amplitude_trigger();
-	TC1_init();
+	
 	
 	//nothing important in main()-loop
 	while (1)

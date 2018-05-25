@@ -28,7 +28,7 @@ struct tdoa {
 	double tij, tik, tkj, tkl;
 } tdoa_t;
 
-static double v = 340.29;
+static double v = 343;
 
 static double Rik;
 static double Rij;
@@ -68,19 +68,19 @@ static double powZl;
 void tdoa_init()
 {
 	coord_t.xi = 0;
-	coord_t.xj = 0;
-	coord_t.xk = 0.7;
-	coord_t.xl = 0.7;
+	coord_t.xj = 1.76;
+	coord_t.xk = 0;
+	coord_t.xl = 1.73;
 
 	coord_t.yi = 0;
-	coord_t.yj = 0.7;
-	coord_t.yk = 0.7;
-	coord_t.yl = 0;
+	coord_t.yj = 0;
+	coord_t.yk = 1.90;
+	coord_t.yl = 1.90;
 
-	coord_t.zi = 0.7;
-	coord_t.zj = 0.7;
-	coord_t.zk = 0.7;
-	coord_t.zl = 0.7;
+	coord_t.zi = 1.97;
+	coord_t.zj = 1.93;
+	coord_t.zk = 1.955;
+	coord_t.zl = 1.995;
 
 	xji = coord_t.xj - coord_t.xi;
 	xki = coord_t.xk - coord_t.xi;
@@ -116,10 +116,15 @@ void tdoa_init()
 void set_tdoa(double ti, double tj, double tk, double tl)
 {
 	// tj = 1, ti = 1.00085, tk = 0.9956, tl = 0.99397
+	// real values ti = 0.0065174534, tj = 0.00561862, tk = 0.0058444995, tl = 0.0049055456
 	tdoa_t.tij = ti-tj; //0.00085;
 	tdoa_t.tik = ti-tk; //0.00525;
 	tdoa_t.tkj = tk-tj; //-0.0044;
 	tdoa_t.tkl = tk-tl; //0.00163;
+	printf("tij: %s sec\n", get_decimal_string(tdoa_t.tij)); // 0.0008988334
+	printf("tik: %s sec\n", get_decimal_string(tdoa_t.tik)); // 0.0006729539
+	printf("tkj: %s sec\n", get_decimal_string(tdoa_t.tkj)); // 0.0002258795
+	printf("tkl: %s sec\n", get_decimal_string(tdoa_t.tkl)); // 0.0009389539
 	Rij = v * tdoa_t.tij;
 	Rik = v * tdoa_t.tik;
 	Rkj = v * tdoa_t.tkj;
@@ -156,13 +161,10 @@ void calculate_position(double *x, double *y, double *z)
 	double O = 4*powRik*(pow2(coord_t.xi-H) + pow2(coord_t.yi-J) + pow2(coord_t.zi)) - pow2(K);
 
 	double n2m = N/(2*M), om = O/M;
-	//double Imz = n2m + sqrt(pow2(n2m) - om);
-	/*double in = pow2(n2m) - om;
-	if (in <= 0)
-	{
-		in = 1;
-	}
-	*z = n2m - sqrt(in);
+	// double temp_z = n2m - sqrt(pow2(n2m) - om);
+	
+	/*
+	*z = temp_z;
 	*x = G * (*z) + H;
 	*y = W * (*z) + J;
 	*/
@@ -172,15 +174,16 @@ void calculate_position(double *x, double *y, double *z)
 	double complex Imy = W * Imz + J;
 	
 	double temp = 0;
-	if (cimagf(Imz)!= 0)
+	if (cimagf(Imz) != 0)
 	{
 		temp = sqrt(pow2(cimagf(Imz)) + pow2(crealf(Imz)));
-		temp = temp - cimagf(Imz);
-		
 		Imz = temp;
+		//temp = temp - cimagf(Imz);
+		
+		//Imz = temp-1;
 	}
 	
-	*z = Imz-1;
+	*z = Imz;
 	*x = crealf(Imx);
 	*y = crealf(Imy);
 }

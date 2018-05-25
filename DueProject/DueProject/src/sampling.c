@@ -15,7 +15,7 @@
 #include "dec_string.h"
 #include "tdoa.h"
 
-uint32_t rising_edges = 0;
+int rising_edges = 0;
 uint32_t top_to_low = 0;
 
 
@@ -41,9 +41,14 @@ void pin_high_pulse_handler(const uint32_t id, const uint32_t index)
 {
 	static uint32_t frequency = 0;
 	static double beacon_1_time, beacon_2_time, beacon_3_time, beacon_4_time;
+	static int flag_1 = 1;
+	static int flag_2, flag_3, flag_4 = 0;
+	static int receivedSignals = 0;
 	if ((id == ID_PIOA) && (index == PIO_PA14)){
 		if (pio_get(PIOA, PIO_TYPE_PIO_INPUT, PIO_PA14))
 		{
+			//buffer_of_cycles[rising_edges++] = tc_read_cv(TC1, 1);
+			
 			if (rising_edges < CYCLE_INTERVAL)
 			{
 				tc_values[rising_edges] = tc_read_cv(TC1, 1);
@@ -56,47 +61,62 @@ void pin_high_pulse_handler(const uint32_t id, const uint32_t index)
 				frequency = 42000000/(top_to_low/(CYCLE_INTERVAL-1));
 				//printf("Frequency: %lu Hz\n", frequency);
 				rising_edges = 0;
-				if ((frequency >= 38500) && (frequency <= 41500))
+				
+				if ((flag_4 == 0) && (frequency >= 39000) && (frequency <= 41000))
 				{
-					switch(beaconCounter){
-						case 0:
-						beacon_1_time = signal_arrival_time; //threshold voltage value reacts after 7th period
-						break;
-						case 1:
-						beacon_2_time = signal_arrival_time;
-						break;
-						case 2:
-						beacon_3_time = signal_arrival_time;
-						break;
-						case 3:
-						beacon_4_time = signal_arrival_time;
-						uint32_t start = tc_read_cv(TC2, 2);
-						double b1_in_sec = (float)beacon_1_time*((float)1/42000000)-0.0002; //remove certain periods to get real TDOA values
-						double b2_in_sec = (float)beacon_2_time*((float)1/42000000)-0.000375;
-						double b3_in_sec = (float)beacon_3_time*((float)1/42000000)-0.0002;
-						double b4_in_sec = (float)beacon_4_time*((float)1/42000000)-0.000225;
-						printf("B2-B1: %s ms\n", get_decimal_string((b2_in_sec-b1_in_sec)*1000));
-						printf("B3-B2: %s ms\n", get_decimal_string((b3_in_sec-b2_in_sec)*1000));
-						printf("B4-B3: %s ms\n", get_decimal_string((b4_in_sec-b3_in_sec)*1000));
-						set_tdoa(b1_in_sec, b2_in_sec-0.02, b3_in_sec-0.04, b4_in_sec-0.06);
-						double x = 0;
-						double y = 0;
-						double z = 0;
-						calculate_position(&x, &y, &z);
-						printf("x-coord: %s \n", get_decimal_string(x));
-						printf("y-coord: %s \n", get_decimal_string(y));
-						printf("z-coord: %s \n", get_decimal_string(z));
-						printf("-----------------------------------------\n"); 		
-						uint32_t stop = tc_read_cv(TC2, 2);
-						uint32_t result = stop - start;
-						printf("Time it takes: %s ms\n", get_decimal_string((float)result*((float)1/42000000)*1000));	
-						break;
-					}
+					beacon_4_time = signal_arrival_time; //threshold voltage value reacts after 7th period
+					flag_4 = 1;
+					receivedSignals = 1;
+					//puts("4. Received 40 kHz!");
+				}
+				else if ((flag_2 == 0) && (frequency >= 49000) && (frequency <= 51000))
+				{
+					beacon_2_time = signal_arrival_time;
+					flag_2 = 1;
+					flag_3 = 0;
+					//puts("2. Received 50 kHz!");
+				}
+				else if ((flag_1 == 0) && (frequency >= 54000) && (frequency <= 56000))
+				{
+					beacon_1_time = signal_arrival_time;
+					flag_1 = 1;
+					flag_2 = 0;
+					//puts("1. Received 55 kHz!");
+				}
+				else if ((flag_3 == 0) && (frequency >= 59000) && (frequency <= 61000))
+				{
+					beacon_3_time = signal_arrival_time;
+					flag_3 = 1;
+					flag_4 = 0;
+					//puts("3. Received 60 kHz!");
+				}
+				
+				if (receivedSignals == 1)
+				{
+					double b1_in_sec = (float)beacon_1_time*((float)1/42000000); //remove certain periods to get real TDOA values
+					double b2_in_sec = (float)beacon_2_time*((float)1/42000000);
+					double b3_in_sec = (float)beacon_3_time*((float)1/42000000);
+					double b4_in_sec = (float)beacon_4_time*((float)1/42000000);
+					printf("B2-B1: %s ms\n", get_decimal_string((b2_in_sec-b1_in_sec)*1000));
+				    printf("B3-B2: %s ms\n", get_decimal_string((b3_in_sec-b2_in_sec)*1000));
+				    printf("B4-B3: %s ms\n", get_decimal_string((b4_in_sec-b3_in_sec)*1000));	
+					set_tdoa(b1_in_sec, b2_in_sec-0.02, b3_in_sec-0.04, b4_in_sec-0.06);
+					double x = 0;
+					double y = 0;
+					double z = 0;
+					calculate_position(&x, &y, &z);
+					printf("x-coord: %s \n", get_decimal_string(x));
+					printf("y-coord: %s \n", get_decimal_string(y));
+					printf("z-coord: %s \n", get_decimal_string(z));
+					printf("-----------------------------------------\n");
+					flag_1 = 0;
+					flag_2 = 1;
+					flag_3 = 1;
+					flag_4 = 1;
+					receivedSignals = 0;
 				}
 				pio_enable_interrupt(PIOB, PIO_PB26);
-				
 			}
-			
 		}
 	}
 }

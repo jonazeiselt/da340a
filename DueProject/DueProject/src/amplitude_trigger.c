@@ -21,40 +21,7 @@ void pin_edge_handler(const uint32_t id, const uint32_t index)
 	if ((id == ID_PIOB) && (index == PIO_PB26)){
 		if (pio_get(PIOB, PIO_TYPE_PIO_INPUT, PIO_PB26)){
 			//puts("Amplitude level detected");
-			signal_arrival_time = tc_read_cv(TC2, 2);
-			
-			switch(beaconCounter){
-				case 0:
-				/*remove echoes*/
-				if ((signal_arrival_time-previous_signal_time) >= 688800) //&& (signal_arrival_time-previous_signal_time) <= 905000)
-				{
-					beaconCounter++;
-					previous_signal_time = signal_arrival_time;
-				}
-				break;
-				case 1:
-				if ((signal_arrival_time-previous_signal_time) >= 688800) //&& (signal_arrival_time-previous_signal_time) <= 905000)
-				{
-					beaconCounter++;
-					previous_signal_time = signal_arrival_time;
-				}
-				break;
-				case 2:
-				if ((signal_arrival_time-previous_signal_time) >= 688800) //&& (signal_arrival_time-previous_signal_time) <= 905000)
-				{
-					beaconCounter++;
-					previous_signal_time = signal_arrival_time;
-				}
-				break;
-				case 3:
-				if ((signal_arrival_time-previous_signal_time) >= 688800) //&& (signal_arrival_time-previous_signal_time) <= 905000)
-				{
-					beaconCounter = 0;
-					previous_signal_time = signal_arrival_time;
-				}
-				break;
-			}
-			
+			signal_arrival_time = tc_read_cv(TC1, 1);
 			pio_enable_interrupt(PIOA, PIO_PA14); //estimate frequency
 			pio_disable_interrupt(PIOB, PIO_PB26);
 		}
@@ -73,10 +40,10 @@ void init_amplitude_trigger(void){
 	pio_handler_set(PIOB, ID_PIOB, PIO_PB26, PIO_IT_EDGE, pin_edge_handler);
 	pio_enable_interrupt(PIOB, PIO_PB26);
 	NVIC_EnableIRQ(PIOB_IRQn);
-	
-	/* Configure timer 2 for TDOA*/
+	/*
+	// Configure timer 2 for TDOA
 	pmc_enable_periph_clk(ID_TC8);
-	/* TC2, ch2 is for TDOA */
+	// TC2, ch2 is for TDOA 
 	tc_init(TC2, 2, 0 | TC_CMR_CPCTRG);
-	tc_start(TC2, 2);
+	tc_start(TC2, 2);*/
 }

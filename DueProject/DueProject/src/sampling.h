@@ -9,11 +9,12 @@
 #ifndef SAMPLING_H_
 #define SAMPLING_H_
 
-#define CYCLE_INTERVAL  8
+#define CYCLE_INTERVAL  11
 
-extern uint32_t rising_edges;
+extern int rising_edges;
 extern uint32_t top_to_low;
 uint32_t tc_values[CYCLE_INTERVAL];
+uint32_t buffer_of_cycles[1000];
 
 void pin_high_pulse_handler(const uint32_t id, const uint32_t index);
 void init_pulse_pin(void);
