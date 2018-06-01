@@ -18,15 +18,15 @@ void configure_tc(void)
 	pmc_enable_periph_clk(ID_TC0);
 	/* Configure TC for a 500 kHz frequency and trigger on RC compare. */
 	tc_init(TC0, 0, 0 | TC_CMR_CPCTRG);			//Timer_clock_1 - MCK/2 - 42 MHz (internal clock signal)
-	tc_write_rc(TC0, 0, 84);					//84 corresponds to fs = 500 kHz (42 MHz/84 = 500 kHz)
+	tc_write_rc(TC0, 0, 6300000);				// corresponds to 150 ms 	//84 corresponds to fs = 500 kHz (42 MHz/84 = 500 kHz)
 	
 	/* Configure and enable interrupt on RC compare:
 	 * A trigger resets the counter and starts the counter clock. RC Compare Trigger is implemented 
 	 * in each channel and can provide a trigger when the counter value matches the RC value.
 	 */
 	NVIC_EnableIRQ((IRQn_Type) ID_TC0);
-	tc_enable_interrupt(TC0, 0, TC_IER_CPCS); //CPCS is 5th bit (nr 4) in  TC Interrupt Enable Register (TC_IER0, ch 0: 0x40080024)
-	tc_start(TC0, 0);
+	//tc_enable_interrupt(TC0, 0, TC_IER_CPCS); //CPCS is 5th bit (nr 4) in  TC Interrupt Enable Register (TC_IER0, ch 0: 0x40080024)
+	//tc_start(TC0, 0);
 	configureDone = 1;
 
 }

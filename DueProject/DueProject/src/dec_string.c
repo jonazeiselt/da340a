@@ -11,9 +11,9 @@
 
  char* get_decimal_string(double in) 
  {
-	char *string = malloc(20);
+	char *string = malloc(100);
 
-	memset(string, 0, 20);
+	memset(string, 0, 100);
 	sprintf(string, "%0.10f", in);
 
 	return string;

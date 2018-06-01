@@ -146,7 +146,8 @@ src/amplitude_trigger.d src/amplitude_trigger.o: \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\string.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\xlocale.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\sys\string.h \
- ../src/configure_tc.h ../src/amplitude_trigger.h ../src/dec_string.h
+ ../src/configure_tc.h ../src/amplitude_trigger.h ../src/dec_string.h \
+ ../src/tdoa.h
 
 ../src/asf.h:
 
@@ -459,3 +460,5 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 ../src/amplitude_trigger.h:
 
 ../src/dec_string.h:
+
+../src/tdoa.h:
